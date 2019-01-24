@@ -1,3 +1,7 @@
+# v 1.8.0-beta
+
+- Added basic auth for helm private repositories. It is not compartibel with version 1.7.3
+
 # v1.7.3
 
 > If you are already using an older version of Helmsman than v1.4.0-rc, please read the changes below carefully and follow the upgrade guide [here](docs/migrating_to_v1.4.0-rc.md)

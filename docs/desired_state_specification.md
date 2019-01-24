@@ -1,5 +1,5 @@
 ---
-version: v1.7.3
+version: v1.8.0-beta
 ---
 
 # Helmsman desired state specification
@@ -231,18 +231,18 @@ Example:
 
 ```toml
 [helmRepos]
-stable = "https://kubernetes-charts.storage.googleapis.com"
-incubator = "http://storage.googleapis.com/kubernetes-charts-incubator"
-myS3repo = "s3://my-S3-private-repo/charts"
-myGCSrepo = "gs://my-GCS-private-repo/charts"
+[helmRepos.stable]
+url = "https://kubernetes-charts.storage.googleapis.com"
+usrname = "test"
+password = "test"
 ```
 
 ```yaml
 helmRepos:
-  stable: "https://kubernetes-charts.storage.googleapis.com"
-  incubator: "http://storage.googleapis.com/kubernetes-charts-incubator"
-  myS3repo: "s3://my-S3-private-repo/charts"
-  myGCSrepo: "gs://my-GCS-private-repo/charts"
+  stable: 
+    url: "https://kubernetes-charts.storage.googleapis.com"
+    username: "test"
+    password: "test"
 ```
 
 ## Apps

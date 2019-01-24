@@ -89,6 +89,16 @@ cross: dep ## Create binaries for all OSs
 	  env CGO_ENABLED=0 gox -os '!freebsd !netbsd' -arch '!arm' -output "dist/{{.Dir}}_{{.OS}}_{{.Arch}}" -ldflags '-X main.Version=${TAG}-${DATE}'
 .PHONY: cross
 
+build_linux: dependencies ## Create binary for Linux
+	@cd $(SRCDIR)helmsman && \
+		CGO_ENABLED=0 GOOS=linux go install -a -ldflags '-X main.version='$TAG' -extldflags "-static"'
+.PHONY: build_linux
+
+build_darwin: dependencies ## Create binary for OSX
+	@cd $(SRCDIR)helmsman && \
+	  CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go install -a -ldflags '-X main.version='$TAG' -extldflags "-static"'
+.PHONY: build_darwin
+
 release: dep ## Generate a new release
 	@cd $(SRCDIR)helmsman && \
 	  goreleaser --release-notes release-notes.md

@@ -26,8 +26,14 @@ type state struct {
 	Certificates map[string]string    `yaml:"certificates"`
 	Settings     config               `yaml:"settings"`
 	Namespaces   map[string]namespace `yaml:"namespaces"`
-	HelmRepos    map[string]string    `yaml:"helmRepos"`
+	HelmRepos    map[string]repo      `yaml:"helmRepos"`
 	Apps         map[string]*release  `yaml:"apps"`
+}
+
+type repo struct {
+	Username       string `yaml:"username"`
+	Password       string `yaml:"password"`
+	Url            string `yaml:"url"`
 }
 
 // validate validates that the values specified in the desired state are valid according to the desired state spec.
@@ -142,7 +148,7 @@ func (s state) validate() (bool, string) {
 			"to work with!"
 	}
 	for k, v := range s.HelmRepos {
-		_, err := url.ParseRequestURI(v)
+		_, err := url.ParseRequestURI(v.Url)
 		if err != nil {
 			return false, "ERROR: repos validation failed -- repo [" + k + " ] " +
 				"must have a valid URL."
@@ -208,7 +214,7 @@ func (s state) print() {
 	printNamespacesMap(s.Namespaces)
 	fmt.Println("\nRepositories: ")
 	fmt.Println("------------- ")
-	printMap(s.HelmRepos, 0)
+	fmt.Printf("%+v\n",s.HelmRepos)
 	fmt.Println("\nApplications: ")
 	fmt.Println("--------------- ")
 	for _, r := range s.Apps {
