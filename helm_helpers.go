@@ -8,7 +8,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
 	"github.com/Praqma/helmsman/gcs"
 	"github.com/hashicorp/go-version"
 )
@@ -285,17 +284,18 @@ func waitForTiller(namespace string) {
 
 // addHelmRepos adds repositories to Helm if they don't exist already.
 // Helm does not mind if a repo with the same name exists. It treats it as an update.
-func addHelmRepos(repos map[string]string) (bool, string) {
+func addHelmRepos(repos map[string]repo) (bool, string) {
 
-	for repoName, url := range repos {
+	for repoName, repoData := range repos {
+
 		// check if repo is in GCS, then perform GCS auth -- needed for private GCS helm repos
 		// failed auth would not throw an error here, as it is possible that the repo is public and does not need authentication
-		if strings.HasPrefix(url, "gs://") {
+		if strings.HasPrefix(repoData.Url, "gs://") {
 			gcs.Auth()
 		}
 		cmd := command{
 			Cmd:         "bash",
-			Args:        []string{"-c", "helm repo add " + repoName + " " + strconv.Quote(url)},
+			Args:        []string{"-c", "helm repo add " + "--username " + repoData.Username + " --password "+ repoData.Password + " " + repoName + " " + strconv.Quote(repoData.Url)},
 			Description: "adding repo " + repoName,
 		}
 
